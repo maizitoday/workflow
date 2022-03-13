@@ -4,13 +4,10 @@
  * @Author: yubo
  * @Date: 2022-03-12 15:54:35
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-13 14:01:42
+ * @LastEditTime: 2022-03-13 16:35:21
  */
 package com.maizi.workflow.controller;
 
-import java.util.List;
-
-import com.maizi.workflow.entity.Student;
 import com.maizi.workflow.security.SecurityUtil;
 import com.maizi.workflow.service.StudentServiceImpl;
 
@@ -27,7 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class StudentController {
+public class WorkFlowController {
 
     @Autowired
     private StudentServiceImpl studentService;
@@ -49,9 +46,14 @@ public class StudentController {
      * @LastEditors: Do not edit
      */
     @GetMapping(value = "list")
-    public List<Student> list() {
-        return studentService.list();
+    public String list() {
+        // return studentService.list();
+        return "来了";
     }
+
+    // 1. 流程部署
+    // 2. 流程定义
+    // 3. 流程实例
 
     /**
      * @Description: 方法说明....查看流程定义
@@ -62,7 +64,7 @@ public class StudentController {
      */
     @GetMapping(value = "my-process")
     public void contextLoads() {
-        securityUtil.logInAs("system");
+        securityUtil.logInAs("admin");
         Page<org.activiti.api.process.model.ProcessDefinition> processDefinitionPage = processRuntime
                 .processDefinitions(Pageable.of(0, 10));
         System.out.println("可用的流程定义数量：" + processDefinitionPage.getTotalItems());
@@ -81,7 +83,7 @@ public class StudentController {
      */
     @GetMapping(value = "my-process-instance")
     public void testStartProcess() {
-        securityUtil.logInAs("system");
+        securityUtil.logInAs("admin");
         ProcessInstance pi = processRuntime
                 .start(ProcessPayloadBuilder.start().withProcessDefinitionKey("myProcess").build());
         System.out.println("流程实例ID：" + pi.getId());

@@ -54,20 +54,20 @@
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-spring-boot-starter</artifactId>
-			<version>7.1.0.M6</version>
-			<exclusions>
+			<version>7.1.0.M1</version>
+			<!-- <exclusions>
 				<exclusion>
 					<groupId>org.mybatis</groupId>
 					<artifactId>mybatis</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions> -->
 		</dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
 			<version>3.4.0</version>
-		</dependency>
+		</dependency> -->
 
 		<!--Mysql jdbc驱动-->
 		<dependency>

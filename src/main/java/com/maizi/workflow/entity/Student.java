@@ -4,11 +4,9 @@
  * @Author: yubo
  * @Date: 2022-03-13 11:39:19
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-13 11:40:23
+ * @LastEditTime: 2022-03-13 15:23:05
  */
 package com.maizi.workflow.entity;
-
-import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -23,7 +21,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@TableName("student")
+// @TableName("student")
 public class Student {
 
     private Integer id;

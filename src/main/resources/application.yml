@@ -26,4 +26,9 @@ spring:
     #full：保存历史数据的最高级别，除了会保存audit级别的数据外，还会保存其他全部流程相关的细节数据，包括一些 流程参数等。 
     history-level: full 
     #校验流程文件，默认校验resources下的processes文件夹里的流程文件 
-    check-process-definitions: false
+    check-process-definitions: true
+
+
+logging:
+  level:
+    org.activiti.engine.impl.persistence.entity: debug
