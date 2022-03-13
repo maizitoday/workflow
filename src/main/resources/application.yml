@@ -1,0 +1,14 @@
+
+server:
+ port: 8080
+
+
+#数据库处理
+spring:
+  datasource:
+    username: root
+    password: Maizi$97
+    url: jdbc:mysql://localhost:3306/maizi_activiti?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    sql-script-encoding: utf-8
+     
