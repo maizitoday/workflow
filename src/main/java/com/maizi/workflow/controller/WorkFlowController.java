@@ -4,7 +4,7 @@
  * @Author: yubo
  * @Date: 2022-03-12 15:54:35
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-13 16:35:21
+ * @LastEditTime: 2022-03-13 18:00:08
  */
 package com.maizi.workflow.controller;
 
@@ -13,6 +13,7 @@ import com.maizi.workflow.service.StudentServiceImpl;
 
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
+import org.activiti.api.process.model.payloads.StartProcessPayload;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
@@ -64,7 +65,8 @@ public class WorkFlowController {
      */
     @GetMapping(value = "my-process")
     public void contextLoads() {
-        securityUtil.logInAs("admin");
+        // securityUtil.logInAs("jack"); // ROLE_ACTIVITI_USER 和
+        // ROLE_ACTIVITI_ADMIN的区别是什么
         Page<org.activiti.api.process.model.ProcessDefinition> processDefinitionPage = processRuntime
                 .processDefinitions(Pageable.of(0, 10));
         System.out.println("可用的流程定义数量：" + processDefinitionPage.getTotalItems());
@@ -83,11 +85,10 @@ public class WorkFlowController {
      */
     @GetMapping(value = "my-process-instance")
     public void testStartProcess() {
-        securityUtil.logInAs("admin");
-        ProcessInstance pi = processRuntime
-                .start(ProcessPayloadBuilder.start().withProcessDefinitionKey("myProcess").build());
-        System.out.println("流程实例ID：" + pi.getId());
-
+        StartProcessPayload startProcessPayload = ProcessPayloadBuilder.start().withProcessDefinitionKey("myProcess")
+                .build();
+        ProcessInstance start = processRuntime.start(startProcessPayload);
+        System.out.println("流程实例：" + start);
     }
 
     /**
