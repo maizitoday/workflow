@@ -4,7 +4,7 @@
  * @Author: yubo
  * @Date: 2022-03-12 15:54:35
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-13 13:59:25
+ * @LastEditTime: 2022-03-13 14:01:42
  */
 package com.maizi.workflow.controller;
 
@@ -54,23 +54,13 @@ public class StudentController {
     }
 
     /**
-     * @Description: 方法说明....
-     * @Date: 2022-03-13 13:58:22
-     * @param {*}
-     * @return {*}
-     * @LastEditors: Do not edit
-     */
-    public void testActBoot() {
-        System.out.println(taskRuntime);
-    }
-
-    /**
      * @Description: 方法说明....查看流程定义
      * @Date: 2022-03-13 13:58:45
      * @param {*}
      * @return {*}
      * @LastEditors: Do not edit
      */
+    @GetMapping(value = "my-process")
     public void contextLoads() {
         securityUtil.logInAs("system");
         Page<org.activiti.api.process.model.ProcessDefinition> processDefinitionPage = processRuntime
@@ -89,6 +79,7 @@ public class StudentController {
      * @return {*}
      * @LastEditors: Do not edit
      */
+    @GetMapping(value = "my-process-instance")
     public void testStartProcess() {
         securityUtil.logInAs("system");
         ProcessInstance pi = processRuntime
@@ -104,6 +95,7 @@ public class StudentController {
      * @return {*}
      * @LastEditors: Do not edit
      */
+    @GetMapping(value = "task")
     public void testTask() {
         securityUtil.logInAs("jack");
         Page<Task> taskPage = taskRuntime.tasks(Pageable.of(0, 10));
