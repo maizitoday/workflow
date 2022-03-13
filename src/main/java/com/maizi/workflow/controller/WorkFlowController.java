@@ -4,7 +4,7 @@
  * @Author: yubo
  * @Date: 2022-03-12 15:54:35
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-13 18:00:08
+ * @LastEditTime: 2022-03-13 19:22:12
  */
 package com.maizi.workflow.controller;
 
@@ -85,7 +85,7 @@ public class WorkFlowController {
      */
     @GetMapping(value = "my-process-instance")
     public void testStartProcess() {
-        StartProcessPayload startProcessPayload = ProcessPayloadBuilder.start().withProcessDefinitionKey("myProcess")
+        StartProcessPayload startProcessPayload = ProcessPayloadBuilder.start().withProcessDefinitionKey("mydemo")
                 .build();
         ProcessInstance start = processRuntime.start(startProcessPayload);
         System.out.println("流程实例：" + start);
