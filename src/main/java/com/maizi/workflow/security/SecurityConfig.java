@@ -4,7 +4,7 @@
  * @Author: yubo
  * @Date: 2022-03-13 13:04:14
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-13 13:06:35
+ * @LastEditTime: 2022-03-13 16:31:31
  */
 package com.maizi.workflow.security;
 
@@ -38,12 +38,12 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService myUserDetailsService() {
         InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
-        String[][] usersGroupsAndRoles = { { "jack", "password", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
-                { "rose", "password", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
-                { "tom", "password", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
-                { "other", "password", "ROLE_ACTIVITI_USER", "GROUP_otherTeam" },
-                { "system", "password", "ROLE_ACTIVITI_USER" },
-                { "admin", "password", "ROLE_ACTIVITI_ADMIN" } };
+        String[][] usersGroupsAndRoles = { { "jack", "123456", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
+                { "rose", "123456", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
+                { "tom", "123456", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
+                { "other", "123456", "ROLE_ACTIVITI_USER", "GROUP_otherTeam" },
+                { "system", "123456", "ROLE_ACTIVITI_USER" },
+                { "admin", "123456", "ROLE_ACTIVITI_ADMIN" } };
         for (String[] user : usersGroupsAndRoles) {
             List<String> authoritiesStrings = Arrays.asList(Arrays.copyOfRange(user, 2, user.length));
             logger.info("> Registering new user: " + user[0] + " with the following Authorities[" + authoritiesStrings
