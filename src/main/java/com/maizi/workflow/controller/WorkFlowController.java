@@ -4,7 +4,7 @@
  * @Author: yubo
  * @Date: 2022-03-12 15:54:35
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-23 21:52:00
+ * @LastEditTime: 2022-03-23 22:24:19
  */
 package com.maizi.workflow.controller;
 
@@ -87,20 +87,42 @@ public class WorkFlowController {
      * @return {*}
      * @LastEditors: Do not edit
      */
-    @GetMapping(value = "addBusinessKey")
-    public void addBusinessKey() {
+    @GetMapping(value = "startProcess1")
+    public void startProcess1() {
         securityUtil.logInAs("system");
 
         Role role = new Role();
         role.setRoleType(2);
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("user_1", "system");
-        map.put("user_2", "system"); // 需要和xml文件里面的进行对应起来
+        map.put("userA", "system");
+        map.put("userB", "system"); // 需要和xml文件里面的进行对应起来
+        map.put("role", 2);
         org.activiti.engine.runtime.ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
                 "my_test",
                 "1002", map);
         System.out.println("流程实例：" + processInstance);
+    }
 
+    /**
+     * @Description: 方法说明....
+     * @Date: 2022-03-23 22:18:12
+     * @param {*}
+     * @return {*}
+     * @LastEditors: Do not edit
+     */
+    @GetMapping(value = "startProcess2")
+    public void startProcess2() {
+        securityUtil.logInAs("rose");
+        Role role = new Role();
+        role.setRoleType(2);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("userC", "rose");
+        map.put("userD", "rose");
+        map.put("role", 1);
+        org.activiti.engine.runtime.ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
+                "my_test",
+                "1003", map);
+        System.out.println("流程实例：" + processInstance);
     }
 
     /**
@@ -110,10 +132,43 @@ public class WorkFlowController {
      * @return {*}
      * @LastEditors: Do not edit
      */
-    @GetMapping(value = "task")
-    public void testTask() {
+    @GetMapping(value = "task1")
+    public void testTask1() {
         securityUtil.logInAs("system");
+        // 查看系统中的所有任务
+        List<org.activiti.engine.task.Task> list = taskService.createTaskQuery().processDefinitionKey("my_test").list();
+        for (org.activiti.engine.task.Task task : list) {
+            System.out.println("----------------------------");
+            System.out.println("流程实例id：" + task.getProcessInstanceId());
+            System.out.println("任务id：" + task.getId());
+            System.out.println("任务负责人：" + task.getAssignee());
+            System.out.println("任务名称：" + task.getName());
+        }
 
+        Page<Task> taskPage = taskRuntime.tasks(Pageable.of(0, 10));
+        if (taskPage.getTotalItems() > 0) {
+            for (Task task : taskPage.getContent()) {
+                // taskRuntime.claim(TaskPayloadBuilder.claim().withTaskId(task.getId()).build());
+                System.out.println("任务：" + task);
+                taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(task.getId()).build());
+            }
+        }
+        Page<Task> taskPage2 = taskRuntime.tasks(Pageable.of(0, 10));
+        if (taskPage2.getTotalItems() > 0) {
+            System.out.println("任务: " + taskPage2.getContent());
+        }
+    }
+
+    /**
+     * @Description: 方法说明....
+     * @Date: 2022-03-23 22:20:25
+     * @param {*}
+     * @return {*}
+     * @LastEditors: Do not edit
+     */
+    @GetMapping(value = "task2")
+    public void testTask2() {
+        securityUtil.logInAs("rose");
         // 查看系统中的所有任务
         List<org.activiti.engine.task.Task> list = taskService.createTaskQuery().processDefinitionKey("my_test").list();
         for (org.activiti.engine.task.Task task : list) {
