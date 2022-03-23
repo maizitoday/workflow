@@ -4,22 +4,24 @@
  * @Author: yubo
  * @Date: 2022-03-12 15:54:35
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-13 19:22:12
+ * @LastEditTime: 2022-03-23 21:52:00
  */
 package com.maizi.workflow.controller;
 
-import com.maizi.workflow.security.SecurityUtil;
-import com.maizi.workflow.service.StudentServiceImpl;
+import java.util.HashMap;
+import java.util.List;
 
-import org.activiti.api.process.model.ProcessInstance;
-import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
-import org.activiti.api.process.model.payloads.StartProcessPayload;
+import com.maizi.workflow.entity.Role;
+import com.maizi.workflow.security.SecurityUtil;
+
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
 import org.activiti.api.task.model.Task;
 import org.activiti.api.task.model.builders.TaskPayloadBuilder;
 import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,13 +30,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class WorkFlowController {
 
     @Autowired
-    private StudentServiceImpl studentService;
-
-    @Autowired
     private ProcessRuntime processRuntime;
 
     @Autowired
     private TaskRuntime taskRuntime;
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+    @Autowired
+    private TaskService taskService;
 
     @Autowired
     private SecurityUtil securityUtil;
@@ -65,8 +70,7 @@ public class WorkFlowController {
      */
     @GetMapping(value = "my-process")
     public void contextLoads() {
-        // securityUtil.logInAs("jack"); // ROLE_ACTIVITI_USER 和
-        // ROLE_ACTIVITI_ADMIN的区别是什么
+        securityUtil.logInAs("system"); // ROLE_ACTIVITI_USER 和
         Page<org.activiti.api.process.model.ProcessDefinition> processDefinitionPage = processRuntime
                 .processDefinitions(Pageable.of(0, 10));
         System.out.println("可用的流程定义数量：" + processDefinitionPage.getTotalItems());
@@ -77,18 +81,26 @@ public class WorkFlowController {
     }
 
     /**
-     * @Description: 方法说明....启动流程实例
-     * @Date: 2022-03-13 13:58:54
+     * @Description: 方法说明....
+     * @Date: 2022-03-23 20:24:46
      * @param {*}
      * @return {*}
      * @LastEditors: Do not edit
      */
-    @GetMapping(value = "my-process-instance")
-    public void testStartProcess() {
-        StartProcessPayload startProcessPayload = ProcessPayloadBuilder.start().withProcessDefinitionKey("mydemo")
-                .build();
-        ProcessInstance start = processRuntime.start(startProcessPayload);
-        System.out.println("流程实例：" + start);
+    @GetMapping(value = "addBusinessKey")
+    public void addBusinessKey() {
+        securityUtil.logInAs("system");
+
+        Role role = new Role();
+        role.setRoleType(2);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("user_1", "system");
+        map.put("user_2", "system"); // 需要和xml文件里面的进行对应起来
+        org.activiti.engine.runtime.ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
+                "my_test",
+                "1002", map);
+        System.out.println("流程实例：" + processInstance);
+
     }
 
     /**
@@ -100,11 +112,22 @@ public class WorkFlowController {
      */
     @GetMapping(value = "task")
     public void testTask() {
-        securityUtil.logInAs("jack");
+        securityUtil.logInAs("system");
+
+        // 查看系统中的所有任务
+        List<org.activiti.engine.task.Task> list = taskService.createTaskQuery().processDefinitionKey("my_test").list();
+        for (org.activiti.engine.task.Task task : list) {
+            System.out.println("----------------------------");
+            System.out.println("流程实例id：" + task.getProcessInstanceId());
+            System.out.println("任务id：" + task.getId());
+            System.out.println("任务负责人：" + task.getAssignee());
+            System.out.println("任务名称：" + task.getName());
+        }
+
         Page<Task> taskPage = taskRuntime.tasks(Pageable.of(0, 10));
         if (taskPage.getTotalItems() > 0) {
             for (Task task : taskPage.getContent()) {
-                taskRuntime.claim(TaskPayloadBuilder.claim().withTaskId(task.getId()).build());
+                // taskRuntime.claim(TaskPayloadBuilder.claim().withTaskId(task.getId()).build());
                 System.out.println("任务：" + task);
                 taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(task.getId()).build());
             }
