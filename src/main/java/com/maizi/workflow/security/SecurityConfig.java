@@ -4,7 +4,7 @@
  * @Author: yubo
  * @Date: 2022-03-13 13:04:14
  * @LastEditors: yubo
- * @LastEditTime: 2022-03-13 16:31:31
+ * @LastEditTime: 2022-03-30 13:31:21
  */
 package com.maizi.workflow.security;
 
@@ -41,9 +41,9 @@ public class SecurityConfig {
         String[][] usersGroupsAndRoles = { { "jack", "123456", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
                 { "rose", "123456", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
                 { "tom", "123456", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
-                { "other", "123456", "ROLE_ACTIVITI_USER", "GROUP_otherTeam" },
-                { "system", "123456", "ROLE_ACTIVITI_USER" },
-                { "admin", "123456", "ROLE_ACTIVITI_ADMIN" } };
+                { "other", "123456", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam" },
+                { "system", "123456", "ROLE_ACTIVITI_USER", "GROUP_otherTeam" },
+                { "admin", "123456", "ROLE_ACTIVITI_USER", "GROUP_otherTeam" } };
         for (String[] user : usersGroupsAndRoles) {
             List<String> authoritiesStrings = Arrays.asList(Arrays.copyOfRange(user, 2, user.length));
             logger.info("> Registering new user: " + user[0] + " with the following Authorities[" + authoritiesStrings
